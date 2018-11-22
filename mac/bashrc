@@ -1,0 +1,57 @@
+# git prompt stuff
+# Ref: https://git-scm.com/book/en/v2/Appendix-A%3A-Git-in-Other-Environments-Git-in-Bash
+source /usr/local/etc/bash_completion.d/git-prompt.sh
+GIT_PS1_SHOWDIRTYSTATE=true
+GIT_PS1_SHOWSTASHSTATE=true
+GIT_PS1_SHOWUPSTREAM='auto'
+
+export PS1='\u in \[\033[32m\]\w\[\033[33m\]$(__git_ps1 " (%s) ")\[\033[00m\]\n\$ '
+
+# Get history with proper timestamp
+export HISTTIMEFORMAT="%d/%m/%y %T "
+
+# Multiple highlighter useful with messy output
+# Ref: https://github.com/paoloantinori/hhighlighter
+. /Users/silv/hhighlighter/h.sh
+
+# Aliases
+alias l='ls -lah'
+alias ll='ls -al'
+alias user_add='ansible-playbook ~/playbooks/plays/user.yml --extra-vars'
+alias hg_purge='hg st -un0 | xargs -0 rm'
+
+# Don't get asked for the password of the pubkey
+ssh-add -K
+
+# Push git with correct id_rsa
+alias git_push='ssh-agent bash -c "ssh-add ~/.ssh_private/id_rsa; git push git@bitbucket.org:silviump/vim.git"'
+
+if [ -f ~/.aliases ]; then
+    source ~/.aliases
+fi
+
+# AUTOCOMPLETIONS
+source /usr/local/etc/bash_completion.d/git-completion.bash
+source /usr/local/etc/bash_completion.d/brew
+source /usr/local/etc/bash_completion.d/hg-completion.bash
+
+# ssh autocomplete based on ~/.ssh/config
+_complete_ssh_hosts ()
+{
+        COMPREPLY=()
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        comp_ssh_hosts=$(cat ~/.ssh/known_hosts | \
+                        cut -f 1 -d ' ' | \
+                        sed -e s/,.*//g | \
+                        grep -v ^# | \
+                        uniq | \
+                        grep -v "\[" ;
+                cat ~/.ssh/config | \
+                        grep "^Host " | \
+                        awk '{print $2}'
+                )
+        COMPREPLY=( $(compgen -W "${comp_ssh_hosts}" -- $cur))
+        return 0
+}
+complete -F _complete_ssh_hosts ssh
+complete -F _complete_ssh_hosts ping
