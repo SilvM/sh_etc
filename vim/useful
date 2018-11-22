@@ -1,0 +1,2 @@
+ssh-agent bash -c 'ssh-add ~/.ssh_private/id_rsa; git push git@bitbucket.org:silviump/vim.git'
+git diff HEAD:_myvim.vim _myvim.vim 
