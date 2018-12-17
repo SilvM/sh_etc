@@ -1,0 +1,53 @@
+#!/bin/bash -       
+# Author          : Silviu Marchis
+# Description     : 
+
+# Exit bash script on error
+set -e
+
+# Helper function for logging
+logging() {
+    log_level=$1
+    # Escape codes for colored output
+    C_NORMAL="\033[0m"
+    C_RED="\033[31m"
+    # set the exit flag if logging error
+    if [ "$log_level" = "error" ]; then
+        should_exit=true
+    else
+        should_exit=false
+    fi
+    case $log_level in
+        info)
+                color=$C_NORMAL
+                ;;
+        error)
+                color=$C_RED
+                ;;
+    esac
+    shift
+    # Output
+    echo -e "${color}$(date +'%Y-%m-%d %H:%M:%S') $(echo $log_level | tr '[:lower:]' '[:upper:]'): $C_NORMAL ${*}"
+    if [ "$should_exit" == "true" ]; then
+        rm -f /tmp/the.lock
+        exit 1
+    fi
+    return 0
+}
+
+# Check on user running script and exit if not root
+if [[ $UID != 0 ]]; then
+    logging "error" "Please run as root and not as $(whoami)!"
+fi
+
+# Cleanup lock file or other stuff
+function cleanup {
+    if [[ -e "$LOCKFILE" ]]; then
+        logging info "Cleaning up lock file"
+        rm -f "$LOCKFILE" || logging error "Encountered error while trying to remove $LOCKFILE"
+    fi
+}
+trap cleanup EXIT
+
+# Acquire lock
+lockfile -r 0 "$LOCKFILE" || logging error "Failed to acquire lock. Check if procmail is installed or if /tmp/the.lock exists"
