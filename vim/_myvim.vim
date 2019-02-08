@@ -105,10 +105,10 @@ nmap <M-k> mz:m-2<cr>`z
 vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
-" Vim 7+ tab shortcuts
+" Vim 7+ tab shortcuts to use ctrl+tab
 nmap <F1> <C-w>gf
-nmap <F2> :tabp<cr>
-nmap <F3> :tabn<cr>
+nmap <C-Tab> :tabn<cr>
+nmap <C-S-Tab> :tabp<cr>
 
 " Split config
 set splitbelow
