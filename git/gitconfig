@@ -1,0 +1,36 @@
+# This is Git's per-user configuration file.
+[alias]
+  co = checkout
+  st = status
+  br = branch
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --abbrev=12
+  type = cat-file -t
+  dump = cat-file -p
+  ls = ls-files --stage --abbrev
+
+# Color
+[color]
+   branch = auto
+   diff = auto
+   status = auto
+# One might customise with the below options
+#[color "branch"]
+#  current = yellow reverse
+#  local = yellow
+#  remote = green
+#[color "diff"]
+#  meta = yellow bold
+#  frag = magenta bold
+#  old = red bold
+#  new = green bold
+#[color "status"]
+#  added = yellow
+#  changed = green
+#  untracked = cyan
+
+# For Git Large File Storage (LFS)
+[filter "lfs"]
+   clean = git-lfs clean -- %f
+   smudge = git-lfs smudge -- %f
+   process = git-lfs filter-process
+   required = true
