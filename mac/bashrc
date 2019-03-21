@@ -33,7 +33,7 @@ fi
 # AUTOCOMPLETIONS
 source /usr/local/etc/bash_completion.d/git-completion.bash
 source /usr/local/etc/bash_completion.d/brew
-source /usr/local/etc/bash_completion.d/hg-completion.bash
+source /usr/local/ibmcloud/autocomplete/bash_autocomplete
 
 # ssh autocomplete based on ~/.ssh/config
 _complete_ssh_hosts ()
