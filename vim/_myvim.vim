@@ -4,37 +4,22 @@ set showcmd
 syntax on
 set number
 set hls
+" Disable hls on Enter hit
+nnoremap <CR> :set hlsearch!<CR>
+
+"call plug#begin('C:\Users\Silv\vimfiles\autoload\plug.vim')
+call plug#begin('/mnt/c/Users/Silv/vimfiles/autoload/plug.vim')
+Plug 'elzr/vim-json'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'w0rp/ale'
+Plug 'morhetz/gruvbox'
+
+" Initialize plugin system
+call plug#end()
 
 " Toggle hls on Enter hit
 nnoremap <CR> :set hlsearch!<CR>
-
-" Vundle config
-filetype off " required
-" let Vundle manage Vundle, required
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-" --> Keep Plugin commands between vundle#begin/end.
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'elzr/vim-json'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'w0rp/ale'
-Plugin 'morhetz/gruvbox'
-" <-- End of plugin declaration
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
 
 " Ale shortcuts move between errors
 nmap <silent> <D-j> <Plug>(ale_previous_wrap)
@@ -78,7 +63,9 @@ if has("gui_running")
     set guioptions+=e
     set t_Co=256
     set guitablabel=%M\ %t
-    set guifont=Ubuntu\ Mono:h15
+    set guifont=Ubuntu\ Mono:h13
+    set encoding=utf-8
+    set rop=type:directx,gamma:1.0,contrast:0.5,level:1,geom:1,renmode:4,taamode:1
 endif
 
 "Show Brackets
@@ -170,7 +157,7 @@ nnoremap ,head :-1r$HOME/scripts/vim/templates/head<CR>A
 highlight UnwanttedTab ctermbg=red guibg=darkred
 highlight TrailSpace guibg=red ctermbg=darkred
 match UnwanttedTab /\t/
-match TrailSpace / \+$/ 
+match TrailSpace / \+$/
 
 autocmd ColorScheme * highlight UnwanttedTab ctermbg=red guibg=darkred
 autocmd ColorScheme * highlight TrailSpace guibg=red ctermbg=darkred
@@ -194,4 +181,4 @@ set noerrorbells visualbell t_vb=
 autocmd GUIEnter * set visualbell t_vb=
 
 " Reason why ^O takes seconds to return when hitting Esc. Affects only terminal
-"set timeout timeoutlen=5000 ttimeoutlen=100
+set timeout timeoutlen=5000 ttimeoutlen=100
