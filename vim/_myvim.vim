@@ -3,37 +3,38 @@ set nocp
 set showcmd
 syntax on
 set number
-colorscheme murphy
 set hls
-" Disable hls on Enter hit
+
+" Toggle hls on Enter hit
 nnoremap <CR> :set hlsearch!<CR>
+
+" Macros definitions
+" Highlight JSON and pretty print in new buffer
+let @j=':.!jq
+:set syntax=json
+'
 
 
 " Vundle config
-filetype off                  " required
+filetype off " required
 " let Vundle manage Vundle, required
-
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 " --> Keep Plugin commands between vundle#begin/end.
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
-
 Plugin 'VundleVim/Vundle.vim'
-Bundle 'Rykka/riv.vim'
-Bundle 'Rykka/InstantRst'
 Plugin 'elzr/vim-json'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'w0rp/ale'
-
+Plugin 'morhetz/gruvbox'
 " <-- End of plugin declaration
 call vundle#end()            " required
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
-
 " Brief help
 " :PluginList       - lists configured plugins
 " :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
@@ -42,21 +43,41 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
+" Ale shortcuts move between errors
+nmap <silent> <D-j> <Plug>(ale_previous_wrap)
+nmap <silent> <D-k> <Plug>(ale_next_wrap)
+" Note Ale line length configured in actual linter (e.g. for Python it's in ~/.config/flake8
+" Ale tie with Airline Status line
+let g:airline#extensions#ale#enabled=1
 
-" dark backround is gth on Ubuntu console
-"set background=dark
+" THEME
+" Footer theme
+let g:airline_theme='soda'
+" ayu_mirage
+" monochrome
+" base16_isotope
+"let g:airline_theme='base16_isotope'
+
+" All gruvbox settings come before colorscheme command https://github.com/morhetz/gruvbox/wiki/Configuration#ggruvbox_contrast_dark
+" Changes theme to dark
+set background=dark
+" disable italics comments
+let g:gruvbox_italicize_comments=0
+colorscheme gruvbox
 
 " Stupid mistakes repaired
 :command WQ wq
 :command Wq wq
 :command Q q
+:command QA qa
 :command W w
 
-" Makes search act like search in modern browsers
-set incsearch
 
+" SEARCH
+" Start searching as soon as I type; search case insensitive until you see capital letter
+set incsearch smartcase
 " Ignore case when searching
-" set ignorecase
+"set ignorecase
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -64,30 +85,27 @@ if has("gui_running")
     set guioptions+=e
     set t_Co=256
     set guitablabel=%M\ %t
-    set guifont=Ubuntu\ Mono:h13
-    colorscheme desert
+    set guifont=Ubuntu\ Mono:h15
 endif
 
 "Show Brackets
 set showmatch
 
+" Disable stuff
 " Turn backup off, since most stuff is in SVN, git etc anyway...
-set nobackup
-set nowb
-set noswapfile
+set nobackup nowb noswapfile
+" Disable middle click pasting
+imap <MiddleMouse> <Nop>
+map <MiddleMouse> <Nop>
 
 " Reselect visual block after indentation
 vnoremap < <gv
 vnoremap > >gv
 
 " Tab related
-" Use spaces instead of tabs
-set expandtab
-" Be smart when using tabs ;)
-set smarttab
+set smarttab expandtab " Use spaces instead of tabs & Be smart when using tabs ;)
 " 1 tab == 4 spaces
-set shiftwidth=4
-set tabstop=4
+set shiftwidth=4 tabstop=4 softtabstop=4
 
 set ai "Auto indent
 set si "Smart indent
@@ -100,8 +118,8 @@ autocmd BufReadPost *
      \ endif
 
 " Move a line of text using ALT+[jk]
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
+nmap <C-J> mz:m+<cr>`z
+nmap <C-K> mz:m-2<cr>`z
 vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
@@ -109,16 +127,14 @@ vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 nmap <F1> <C-w>gf
 nmap <C-Tab> :tabn<cr>
 nmap <C-S-Tab> :tabp<cr>
-
 " Split config
 set splitbelow
 set splitright
-
 " Split navigation
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+"nnoremap <C-J> <C-W><C-J>
+"nnoremap <C-K> <C-W><C-K>
+"nnoremap <C-L> <C-W><C-L>
+"nnoremap <C-H> <C-W><C-H>
 
 " Folding
 set foldmethod=indent
@@ -127,38 +143,37 @@ set foldlevel=99
 nnoremap <space> za
 
 "" github.com/mcantor/no_plugins
-" make search in :find recursive from current position
-set path+=**
-" add menu with options for command mode
-set wildmenu
-" add file browser and network functionalities
-if version >= 600
-    filetype plugin indent on
-    " Start it at when vim is called alone :
-    augroup VimStartup
-      au!
-      au VimEnter * if expand("%") == "" | e . | endif
-    augroup END
+set path=** " make search in :find recursive from current position
+set wildmenu " add menu with options for command mode
 
-"    " Options for netrw
-"    let g:netrw_browse_split=3  " open in prior window
-"    let g:netrw_altv=1          " open splits to the right
-"    let g:netrw_liststyle=3     " tree view
-"    let g:netrw_list_hide=netrw_gitignore#Hide()
-"    let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
-"    let g:netrw_preview=1       " Vertical splitting for previewing files
+" add file browser and network functionalities
+"if version >= 600
+"    filetype plugin indent on
+"    " Start it at when vim is called alone :
+"    augroup VimStartup
+"      au!
+"      au VimEnter * if expand("%") == "" | e . | endif
+"    augroup END
+"endif
+
+" Options for netrw
+"let g:netrw_browse_split=2  " open in prior window
+"let g:netrw_altv=1          " open splits to the right
+let g:netrw_keepdir = 0     " cd everytime we navigate around
+let g:netrw_banner = 0      " hide banner
+let g:netrw_liststyle = 1   " list with details
+let g:netrw_winsize = 80    " when opening with v, give more space to it than netrw
 
 "augroup ProjectDrawer
 "      autocmd!
 "        autocmd VimEnter * :Vexplore
 "    augroup END
-endif
 
 "" Templates
 " header for scripts
 nnoremap ,head :-1r$HOME/scripts/vim/templates/head<CR>A
 
-" Mark whitespaces red (probably(
+" Mark whitespaces red (probably)
 highlight UnwanttedTab ctermbg=red guibg=darkred
 highlight TrailSpace guibg=red ctermbg=darkred
 match UnwanttedTab /\t/
@@ -175,3 +190,15 @@ func! DeleteTrailingWS()
 endfunc
 autocmd BufWrite *.py :call DeleteTrailingWS()
 autocmd BufWrite *.coffee :call DeleteTrailingWS()
+
+" Vim sessions config
+let g:session_dir = '~/.vim/sessions'
+" Speed up ctrl+p by disabling cache
+let g:ctrlp_use_caching =0
+
+" Disable bells
+set noerrorbells visualbell t_vb=
+autocmd GUIEnter * set visualbell t_vb=
+
+" Reason why ^O takes seconds to return when hitting Esc. Affects only terminal
+"set timeout timeoutlen=5000 ttimeoutlen=100
