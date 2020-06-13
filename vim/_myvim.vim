@@ -8,13 +8,6 @@ set hls
 " Toggle hls on Enter hit
 nnoremap <CR> :set hlsearch!<CR>
 
-" Macros definitions
-" Highlight JSON and pretty print in new buffer
-let @j=':.!jq
-:set syntax=json
-'
-
-
 " Vundle config
 filetype off " required
 " let Vundle manage Vundle, required
