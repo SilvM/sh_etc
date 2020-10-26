@@ -3,7 +3,7 @@
   co = checkout
   st = status
   br = branch
-  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --abbrev=12
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short --abbrev=12 --name-status #--oneline
   type = cat-file -t
   dump = cat-file -p
   ls = ls-files --stage --abbrev
@@ -35,3 +35,10 @@
    smudge = git-lfs smudge -- %f
    process = git-lfs filter-process
    required = true
+[diff]
+    tool = vimdiff
+[merge]
+    tool = vimdiff
+    conflictstyle = diff3
+[core]
+    editor = vim
