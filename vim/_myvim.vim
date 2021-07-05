@@ -5,7 +5,7 @@ syntax on
 set number
 set hls
 " Disable hls on Enter hit
-nnoremap <CR> :set noh<CR>
+nnoremap <BS> :set nohls!<CR>
 
 "call plug#begin('C:\Users\Silv\vimfiles\autoload\plug.vim')
 call plug#begin('~/.vim/plugged/')
@@ -17,10 +17,10 @@ Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mbbill/undotree'
-call plug#end()
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
-" Toggle hls on Enter hit
-nnoremap <CR> :set hlsearch!<CR>
+Plug 'aklt/plantuml-syntax'
+call plug#end()
 
 " Ale shortcuts move between errors. CTRL H or L
 map <silent> <C-h> <Plug>(ale_previous_wrap)
@@ -60,8 +60,9 @@ set incsearch smartcase
 
 " Set extra options when running in GUI mode
 if has("gui_running")
-    set guioptions-=T
-    set guioptions+=e
+    "set guioptions-=T
+    "set guioptions+=e
+    set guioptions=gme
     set t_Co=256
     set guitablabel=%M\ %t
     set guifont=Ubuntu\ Mono:h15
@@ -139,13 +140,18 @@ set wildmenu " add menu with options for command mode
 "endif
 
 " Options for netrw
-"let g:netrw_browse_split=2  " open in prior window
-"let g:netrw_altv=1          " open splits to the right
+" 1 - new horizontal
+" 2 - new vertical
+" 3 - new tab
+" 4 - previous window
+let g:netrw_browse_split=4
+let g:netrw_altv=1          " open splits to the right
 let g:netrw_keepdir = 0     " cd everytime we navigate around
 let g:netrw_banner = 0      " hide banner
-let g:netrw_liststyle = 1   " list with details
-let g:netrw_winsize = 80    " when opening with v, give more space to it than netrw
+let g:netrw_liststyle = 1   " 1-4: thin, long, wide, tree
+let g:netrw_winsize = 20    " how wide should netrw be
 
+" start with netrw
 "augroup ProjectDrawer
 "      autocmd!
 "        autocmd VimEnter * :Vexplore
@@ -153,7 +159,8 @@ let g:netrw_winsize = 80    " when opening with v, give more space to it than ne
 
 "" Templates
 " header for scripts
-nnoremap ,head :-1r$HOME/scripts/vim/templates/head<CR>A
+nnoremap ,head :-1r$HOME/repos_other/sh_etc/vim/templates/bash<CR>A
+nnoremap ,go :-1r$HOME/repos_other/sh_etc/vim/templates/go<CR>A
 
 " Mark whitespaces red (probably)
 highlight UnwanttedTab ctermbg=red guibg=darkred
@@ -194,5 +201,18 @@ packadd! matchit
 "Leader commands
 map <Leader>j :.!jq .<Enter>
 map <Leader>J :%!jq .<Enter>
-map <Leader>n :s/\\\\n/\r/g<Enter>:s/\\n/\r/g<Enter>
+map <Leader>k :%!jq '. \| fromjson'<Enter>
+map <Leader>n :s/\n/\r/g<Enter>
 map <Leader>s :%s/\<<C-r><C-w>\>//g<Left><Left>
+map <Leader>f :Files<Enter>
+map <Leader>r :Rg<Enter>
+map <Leader>u :UndotreeShow<Enter>:UndotreeFocus<Enter>
+map <Leader>2 :set sw=2 ts=2<Enter>
+map <Leader>4 :set sw=4 ts=4<Enter>
+map <Leader>- :Lex<Enter>
+
+"Leader Go commands
+autocmd FileType go nmap <Leader>i <Plug>(go-info)
+
+"vim-go
+au BufRead,BufNewFile *.gohtml set filetype=gohtmltmpl
